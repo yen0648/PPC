@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Culture and Online Behavior</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Vertical gradient matching the theme's vibe */
+            background: linear-gradient(to bottom, #321315 0%, #24191c 45%, #1e1e24 100%);
+            background-color: #1e1e24; /* Fallback */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            color: #f6f0f0;
+            background: rgba(214, 31, 18, 0.25);
+            border: 1px solid rgba(211, 28, 15, 0.4);
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Centered Grid for Cards */
+        .cards-container {
+            display: flex;
+            gap: 24px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+
+            /* Slide Up Initial Animation State */
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Active state when scrolled into view */
+        .cards-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Register custom property so angle rotates smoothly across browsers */
+        @property --angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        /* Card Wrapper with moving border */
+        .card-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+            max-width: 360px;
+            border-radius: 22px;
+            padding: 4px; /* Border thickness */
+            display: flex;
+            flex-direction: column;
+            
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            
+            animation: rotateBorder 4s linear infinite;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes rotateBorder {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        /* Inner container card */
+        .container {
+            background-color: rgba(30, 30, 36, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        /* Uniform circle container for icons */
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            background: rgba(204, 21, 8, 0.6);
+            border: 1px solid rgba(146, 20, 12, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(146, 20, 12, 0.3);
+        }
+
+        /* Standardized image size and leveling across all icons */
+        .card-icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+
+        p {
+            color: #fff8f0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hidden {
+            color: #1e1e24;
+        }
+
+        /* ==================== FEATURED SECTION STYLES ==================== */
+        .featured-section-wrapper {
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto 3rem auto;
+            border-radius: 22px;
+            padding: 4px;
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            animation: rotateBorder 4s linear infinite;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+            /* Slide Up Animation Initial State */
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .featured-section-wrapper.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .featured-container {
+            background-color: rgba(30, 30, 36, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 2.5rem;
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            text-align: left;
+        }
+
+        /* Image Box Slider Container */
+        .slider-box {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(211, 28, 15, 0.3);
+        }
+
+        .slider-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide-img {
+            min-width: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        /* Video Box Container with Slight Glowing Border Effect */
+        .video-box {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            /* Slight glowing border effect using shadow and border tint */
+            border: 1.5px solid rgba(243, 243, 243, 0.6);
+            box-shadow: 0 0 18px rgba(214, 8, 87, 0.25), 0 8px 25px rgba(0, 0, 0, 0.5);
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Slider Controls */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.3s, transform 0.2s;
+            z-index: 10;
+        }
+
+        .slider-btn:hover {
+            background: rgba(204, 21, 8, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-btn.prev { left: 12px; }
+        .slider-btn.next { right: 12px; }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.3s, width 0.3s;
+        }
+
+        .dot.active {
+            background: #bc8a1d;
+            width: 22px;
+            border-radius: 10px;
+        }
+
+        /* Text Content */
+        .featured-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .featured-content h1 {
+            color: #f6f0f0;
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            border-left: 4px solid #bc8a1d;
+            padding-left: 12px;
+        }
+
+        .featured-content p {
+            color: #fff8f0;
+            font-size: 1.15rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /* Responsive layout for smaller screens */
+        @media (max-width: 850px) {
+            .featured-container {
+                flex-direction: column !important;
+                padding: 1.8rem;
+                text-align: center;
+            }
+
+            .slider-box, .video-box {
+                width: 100%;
+                height: 250px;
+            }
+
+            .featured-content h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="header">DIGITAL CULTURE AND ONLINE BEHAVIOR</h1>
+
+    <div class="cards-container">
+        <!-- Div 1 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <img src="fire.png" alt="Icon">
+                </div>
+                <p>This module explores the dynamic world of digital culture, where memes, influencers, and online communities influence trends.</p>
+            </div>
+        </div>
+
+        <!-- Div 2 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <img src="bubblehead.png" alt="Icon">
+                </div>
+                <p>It examines fandoms and Filipino online spaces as ways people connect and express themselves,  <span class="hidden">................</span></p>
+            </div>
+        </div>
+
+        <!-- Div 3 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <img src="scale.png" alt="Icon">
+                </div>
+                <p>while also looking at the impact of technology, cancel culture, and identity politics on our perceptions of ourselves and others.</p>
+            </div>
+        </div>
+    </div>
+
+    <br> <br> <br>
+    <!--STARTTTTTT-->
+
+    <!-- TOP SLIDER 1: SLIDER ON LEFT, TEXT ON RIGHT -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="slider-box">
+                <div class="slider-track">
+                    <img class="slide-img" src="facebook.jpg" alt="Social Media 1">
+                    <img class="slide-img" src="tiktok.jpg" alt="Social Media 2">
+                    <img class="slide-img" src="ig.jpg" alt="Social Media 3">
+                    <img class="slide-img" src="yt.avif" alt="Social Media 4">
+                    <img class="slide-img" src="X.jpg" alt="Social Media 5">
+                    <img class="slide-img" src="reddit.jpg" alt="Social Media 6">
+                </div>
+                <button class="slider-btn prev">&#10094;</button>
+                <button class="slider-btn next">&#10095;</button>
+                <div class="slider-dots"></div>
+            </div>
+
+            <div class="featured-content">
+                <h1>Memes, Virality, and Influencers</h1>
+                <p>In today’s digital world, content spreads faster than ever. Platforms like Facebook, TikTok, Instagram, YouTube, X, and Reddit allow ideas, trends, and personalities to reach millions within hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP SLIDER 2: TEXT ON LEFT, SLIDER ON RIGHT -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Memes and Online Humor</h1>
+                <p>A meme is an <span class="bold">idea, joke, image, video, or phrase that spreads quickly online.</span> Memes are <humorous, class="bold">humorous, relatable, simple to understand and share, and adaptable,</span> allowing users to remix them for different contexts.</p>
+            </div>
+
+            <div class="slider-box">
+                <div class="slider-track">
+                    <img class="slide-img" src="meme1.png" alt="Meme 1">
+                    <img class="slide-img" src="meme2.jpeg" alt="Meme 2">
+                    <img class="slide-img" src="meme3.png" alt="Meme 3">
+                </div>
+                <button class="slider-btn prev">&#10094;</button>
+                <button class="slider-btn next">&#10095;</button>
+                <div class="slider-dots"></div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="header">DIFFERENT TYPES OF MEMES</h1>
+
+    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Social Memes</h1>
+                <p>It focuses on <span class="bold">everyday life, relationships, school, work, and human behavior.</span> They help people laugh at their shared challenges and remind them that others go through the same things.</p>
+            </div>
+
+            <div class="video-box">
+                <video src="socialmeme.mp4" autoplay muted loop playsinline></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <video src="politicalmeme.mp4" autoplay muted loop playsinline></video>
+            </div>
+
+            <div class="featured-content">
+                <h1>Political Memes</h1>
+                <p>It is created to express <span class="bold">opinions, reactions, or criticism about government leaders, laws, policies, and current issues.</span> They often use humor, irony, or satire to make serious topics more engaging and easier to understand. These memes can spread political awareness, spark discussions, or even influence public opinion.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Cultural Memes</h1>
+                <p>It is based on <span class="bold">popular culture such as movies, music, TV shows, fashion, internet trends, and famous personalities.</span> They reflect what’s popular in society at a certain time. These memes spread fast because they are based on shared cultural experiences that people already recognize.</p>
+            </div>
+
+            <div class="video-box">
+                <video src="culturalmeme.mp4" autoplay muted loop playsinline></video>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="header">FILIPINO MEMES</h1>
+
+<div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="slider-box">
+                <div class="slider-track">
+                    <img class="slide-img" src="cc3.jpg" alt="Social Media 1">
+                    <img class="slide-img" src="cc4.jpg" alt="Social Media 2">
+                    <img class="slide-img" src="cc5.jpg" alt="Social Media 3">
+                    <img class="slide-img" src="cc6.jpg" alt="Social Media 4">
+                </div>
+                <button class="slider-btn prev">&#10094;</button>
+                <button class="slider-btn next">&#10095;</button>
+                <div class="slider-dots"></div>
+            </div>
+
+            <div class="featured-content">
+                <h1>Filipino Memes</h1>
+                <p>Filipino memes usually come from movie lines, TV show moments, and viral videos that capture the expressive and playful nature of Filipinos</p>
+            </div>
+        </div>
+    </div>
+
+        <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>“Bakit parang kasalanan ko?”</h1>
+                <p>comes from the movie , <span class="bold">Four Sisters and a Wedding (2013)</span>, where Bea Alonzo as Bobbie Salazar delivers the line with emotional intensity. The meme went viral around 2017 and continues to be used humorously for unjust accusations or shifting blame.</p>
+            </div>
+
+            <div class="video-box">
+                <video src="filmeme1.mp4" controls loop playsinline></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <video src="filmeme2.mp4" controls loop playsinline></video>
+            </div>
+
+            <div class="featured-content">
+                <h1>“Keratin?!”</h1>
+                <p>meme originates from Maja Salvador’s 2024 Keratin Plus commercial, where she <span class="bold">humorously repeats the word “Keratin” in a high-pitched tone</span>. This meme is used to react to unexpected or fancy-sounding English words.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>“What hafen, Vella?”</h1>
+                <p>meme comes from a 2013 performance by Christopher Diwata, who <span class="bold">impersonated Taylor Lautner on the “Kalokalike” segment of It’s Showtime.</span> The video clip began circulating on TikTok in late 2024, but it wasn’t until Netflix Philippines shared a meme of it on Facebook that it broke into mainstream consciousness. Taylor Lautner himself acknowledged it in a TikTok video. This meme is used humorously for dramatic or emotional situations. </p>
+            </div>
+
+            <div class="video-box">
+                <video src="filmeme3.mp4" controls loop playsinline></video>
+            </div>
+        </div>
+    </div>
+
+   <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <video src="filmeme4.mp4" controls loop playsinline></video>
+            </div>
+
+            <div class="featured-content">
+                <h1>“Jusko po, Jusko po!”</h1>
+                <p>meme originates from Arman Salon, a Filipino content creator known for his <span class="bold">comedic and exaggerated skits.</span> This meme is used to humorously react to unexpected or overwhelming events.</p>
+            </div>
+        </div>
+    </div>
+
+    <br> <br>
+
+    <h1 class="header">VIRALITY</h1>
+
+    <br> <br>
+
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="slider-box">
+                <div class="slider-track">
+                    <img class="slide-img" src="viral1.jpg" alt="Social Media 1">
+                    <img class="slide-img" src="viral2.png" alt="Social Media 2">
+                    <img class="slide-img" src="viral3.png" alt="Social Media 3">
+                    <img class="slide-img" src="viral4.png" alt="Social Media 4">
+                    <img class="slide-img" src="viral5.jpg" alt="Social Media 5">
+                    <img class="slide-img" src="viral6.jpeg" alt="Social Media 6">
+                </div>
+                <button class="slider-btn prev">&#10094;</button>
+                <button class="slider-btn next">&#10095;</button>
+                <div class="slider-dots"></div>
+            </div>
+
+            <div class="featured-content">
+                <h1>Virality</h1>
+                <p>Content goes viral when it spreads rapidly, often driven by <span class="bold">humor, relatability, shock, or emotion.</span> Filipino netizens’ active sharing plays a major role. Viral posts start with content creation, gain early engagement from friends or followers, are amplified by algorithms, and reach a wider audience through mass sharing. <span class="bold">Filipino influencers gained fame through viral videos that showcase netizens’ humor and creativity</span></p>
+            </div>
+        </div>
+    </div>
+    <br> <br>
+
+    <h1 class="header">FILIPINO INFLUENCERS</h1>
+
+    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Cong TV (Lincoln Velasquez)</h1>
+                <p> launched his YouTube channel in 2008 and became one of the country’s most recognized content creators. He is also the <span class="bold">vocalist of the band COLN and the founder of Team Payaman.</span> In 2022, he received several awards, including <span class="bold">Gaming Male Ambassador of the Year, YouTube Partner of the Year (Male), Instagram Creator of the Year (Male), and the Above and Beyond Award from Tier One Entertainment’s IRL Awards.</span> Cong is widely known for his signature phrases, “What’s up sa inyo, mga paa?” and “Paawer!</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="viral1.jpg" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="viral2.png" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Niana Guerrero and Ranz Kyle</h1>
+                <p>Are <span class="bold">sibling content creators famous for their energetic dance covers and family vlogs.</span> They won Nickelodeon’s <span class="bold">“Favorite Pinoy Internet Star” award in 2019 and the “Entertainment Champion Award” from the Creator and Influencer Council of the Philippines (CICP) in 2020.</span> Niana was also noticed by K-pop idols such as EXO’s Chanyeol, BTS’s J-Hope, GOT7’s BamBam, among others. </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Mimiyuuuh (Jeremy Sancebuche)</h1>
+                <p>Rose to fame in 2019 through the viral video challenge of <span class="bold">“Dalagang Pilipina” by ALLMO$T.</span> That same year, she received the <span class="bold">Trending of the Year award from E! Philippines for her impact on online content.</span> Known as “The People’s Ghorl,” Mimiyuuuh became famous for her signature intro “It’s your ghurl, Mimiyuuuh, oh yeah!” Her iconic pink plastic cabinet also became a recognizable backdrop in many of her early videos.</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="viral3.png" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+   <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="viral4.png" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Sassa Gurl (Felix Petate)</h1>
+                <p>Became popular in 2020 during the pandemic for her <span class="bold">funny TikTok skits.</span> She later appeared in Drag Den (2022) and made history as the <span class="bold">first LGBTQIA+ calendar model for White Castle Whisky in 2022.</span> In 2024, she starred in the political thriller film Balota. Known as the “Pambansang Mima,” Sassa Gurl is admired for her versatile fashion sense and bold style choices</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Esnyr (Esnyr John Ranollo)</h1>
+                <p>Gained attention for his relatable <span class="bold">TikTok skits that brought back high school nostalgia.</span> He later appeared in films such as Balota (2024). Esnyr has stepped up his game by creating a YouTube skit series titled <span class="bold">HAYSKUL CRUSH MOMENTS,</span> featuring a diverse cast of characters including Andrei, Precious, Bogart, Ma’am Castro, and more. His characters became so popular that they were even featured in a weekly task during his stint on Pinoy Big Brother: Celebrity Collab Edition (2025). </p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="viral5.jpg" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="viral6.jpeg" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Erwan Heussaff</h1>
+                <p>A <span class="bold">Filipino-French content creator, chef, and entrepreneur</span> known for showcasing Filipino cuisine and culture through his digital video channel named FEATR. His documentary-style videos highlight local food stories and traditions. He won the <span class="bold">Social Media Category of the James Beard Broadcast Media Awards for his Instagram account.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="header">INFLUENCERS</h1>
+
+    <br> <br>
+
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="slider-box">
+                <div class="slider-track">
+                    <img class="slide-img" src="inf1.jpg" alt="Social Media 1">
+                    <img class="slide-img" src="inf2.jpg" alt="Social Media 2">
+                    <img class="slide-img" src="inf3.webp" alt="Social Media 3">
+                    <img class="slide-img" src="inf4.webp" alt="Social Media 4">
+                    <img class="slide-img" src="inf5.jpg" alt="Social Media 5">
+                </div>
+                <button class="slider-btn prev">&#10094;</button>
+                <button class="slider-btn next">&#10095;</button>
+                <div class="slider-dots"></div>
+            </div>
+
+            <div class="featured-content">
+                <h1>Influencers</h1>
+                <p>In today’s digital age, influencers shape Filipino pop culture by entertaining and reflecting values, humor, and lifestyles. Their content bridges mainstream media and everyday online life:</p>
+            </div>
+        </div>
+    </div>
+    <br> <br>
+
+    <h1 class="header">FILIPINO INFLUENCERS</h1>
+
+    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Heart Evangelista (Love Marie Ongpauco-Escudero)</h1>
+                <p>Combines <span class="bold">celebrity status with digital influence, using her platform to showcase fashion, art, and lifestyle.</span> She is known for <span class="bold">hand-painting luxury bags that reflect her creativity.</span> As a global fashion icon, she attends New York Fashion Week and collaborates with international brands.</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="inf1.jpg" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="inf2.jpg" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Small Laude (Marissa Eduardo-Laude)</h1>
+                <p>Gives viewers a <span class="bold">fun and authentic look into the life of the Filipino elite.</span> She is known for her iconic line, <span class="bold">“Of course! No bashing, it’s for fun!”</span> which reflects her lighthearted and positive personality. Beyond entertainment, she also uses her platform to contribute to society through outreach programs, <span class="bold">earning her the Volvo PH Ironmark Award in 2023.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Arshie Larga (Ramon Christian Larga)</h1>
+                <p>A <span class="bold">licensed pharmacist and trusted health advocate on TikTok.</span> He creates <span class="bold">informative content on safe medicine use and helps raise funds for those who cannot afford their medications.</span> In 2024, <span class="bold">he was included in Forbes’ “30 Under 30 Asia” list for the Media, Marketing, and Advertising Category</span>, which recognizes outstanding young entrepreneurs, leaders, and influencers under the age of 30 from the Asia-Pacific region.</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="inf3.webp" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+   <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="inf4.webp" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Coach Lyqa (Lyqa Maravilla)</h1>
+                <p>A <span class="bold">licensed psychometrician, professional teacher, and motivational speaker</span> known for her educational content on grammar, productivity, and life skills. Through her #TeamLyqa community, she <span class="bold">promotes accessible learning and test preparation.</span> In 2017, she was recognized as one of <span class="bold">YouTube’s NextUp winners.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Alodia Gosiengfiao (Alodia Almira Gosiengfiao-Quimbo)</h1>
+                <p>A <span class="bold">Filipino-Chinese content creator and a pioneer in cosplay and gaming.</span> <span class="bold"></span>Her success helped bring these once niche interests into the mainstream culture and inspired a new generation of digital artists and gamers.</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="inf5.jpg" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+        <br> <br>
+
+    <h1 class="header">CANCEL CULTURE IN NETIZENSHIP</h1>
+
+        <br> <br>
+
+
+       <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="cc1.png" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>Cancel Culture</h1>
+                <p>It refers to the cultural phenomenon of publicly criticizing, boycotting, or withdrawing support from individuals, groups, or brands for perceived offensive actions or statements. It often spreads rapidly on social media, where public shaming and polarized opinions can cause emotional distress, content removal, or serious harm to someone’s reputation and career.</p>
+            </div>
+        </div>
+    </div>
+
+        <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+    <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="featured-content">
+                <h1>Netizenship</h1>
+                <p>Being a responsible and ethical citizen of the internet. It involves using digital platforms carefully, respecting others, and contributing positively to online communities.</p>
+            </div>
+
+            <div class="video-box">
+                <img class="slide-img" src="cc2.jpg" alt="Meme 1">
+            </div>
+        </div>
+    </div>
+
+       <div class="featured-section-wrapper">
+        <div class="featured-container">
+            <div class="video-box">
+                <img class="slide-img" src="memee.jpg" alt="Meme 1">
+            </div>
+
+            <div class="featured-content">
+                <h1>REMEMBER!</h1>
+                <p>When engaging online, you must <span class="bold">think before you post or react.</span> Be respectful and responsible, protect your peace, and avoid joining trends without verifying the facts. Encourage learning and reflection instead of rejection when others make mistakes</p>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Scroll Reveal Observer
+            const animatableElements = document.querySelectorAll('.cards-container, .featured-section-wrapper');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            animatableElements.forEach(el => observer.observe(el));
+
+            // 2. Multi-Slider Controller Initialization
+            const sliderBoxes = document.querySelectorAll('.slider-box');
+
+            sliderBoxes.forEach((sliderBox) => {
+                const track = sliderBox.querySelector('.slider-track');
+                const prevBtn = sliderBox.querySelector('.slider-btn.prev');
+                const nextBtn = sliderBox.querySelector('.slider-btn.next');
+                const dotsContainer = sliderBox.querySelector('.slider-dots');
+                const slides = sliderBox.querySelectorAll('.slide-img');
+
+                if (!slides.length) return;
+
+                let currentIndex = 0;
+
+                // Dynamically build dot indicators for each slider
+                slides.forEach((_, idx) => {
+                    const dot = document.createElement('div');
+                    dot.classList.add('dot');
+                    if (idx === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(idx));
+                    dotsContainer.appendChild(dot);
+                });
+
+                const dots = dotsContainer.querySelectorAll('.dot');
+
+                function updateSlider() {
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    dots.forEach((dot, idx) => {
+                        dot.classList.toggle('active', idx === currentIndex);
+                    });
+                }
+
+                function goToSlide(index) {
+                    currentIndex = index;
+                    updateSlider();
+                }
+
+                function nextSlide() {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    updateSlider();
+                }
+
+                function prevSlide() {
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                    updateSlider();
+                }
+
+                nextBtn.addEventListener('click', nextSlide);
+                prevBtn.addEventListener('click', prevSlide);
+
+                // Auto slide loop every 2.5 seconds
+                let autoSlide = setInterval(nextSlide, 2500);
+
+                // Pause auto-sliding on hover
+                sliderBox.addEventListener('mouseenter', () => clearInterval(autoSlide));
+                sliderBox.addEventListener('mouseleave', () => autoSlide = setInterval(nextSlide, 2500));
+            });
+        });
+    </script>
+</body>
+</html>

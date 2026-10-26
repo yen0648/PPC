@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Culture & Online Behavior - Video Quiz</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Theme background vertical gradient */
+            background: linear-gradient(to bottom, #321315 0%, #24191c 45%, #1e1e24 100%);
+            background-color: #1e1e24;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        @property --angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateBorder {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        /* Outer Container Wrapper with Rotating Conic Gradient Border */
+        .interactive-section-wrapper {
+            position: relative;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto 3.5rem auto;
+            border-radius: 22px;
+            padding: 4px;
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            animation: rotateBorder 4s linear infinite;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+            /* Scroll Slide-Up Animation Initial State */
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .interactive-section-wrapper.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism Inner Container */
+        .interactive-container {
+            background-color: rgba(30, 30, 36, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 2.5rem;
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Left Side: Title Header + Video Container */
+        .left-panel {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .video-header {
+            color: #f6f0f0;
+            background: rgba(214, 31, 18, 0.25);
+            border: 1px solid rgba(211, 28, 15, 0.4);
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Glowing Video Container Box */
+        .video-box {
+            width: 100%;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1.5px solid rgba(188, 138, 29, 0.6);
+            box-shadow: 0 0 18px rgba(188, 138, 29, 0.25), 0 8px 25px rgba(0, 0, 0, 0.5);
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Right Side: 4 Option Buttons + HINT Button Below */
+        .options-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 2x2 Grid for the 4 Buttons */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* Always Visible Option Buttons */
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(188, 138, 29, 0.3);
+            border-radius: 12px;
+            padding: 1.2rem;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            border-color: #bc8a1d;
+            background: rgba(188, 138, 29, 0.15);
+            box-shadow: 0 0 15px rgba(188, 138, 29, 0.3);
+        }
+
+        /* Text Hidden Initially, Revealed via HINT Button */
+        .btn-text {
+            color: #fff8f0;
+            font-size: 1rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        }
+
+        /* Revealed State Styles */
+        .options-panel.revealed .btn-text {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .options-panel.revealed .option-btn {
+            background: rgba(30, 30, 36, 0.85);
+            border-color: rgba(188, 138, 29, 0.6);
+        }
+
+        /* HINT Toggle Button Placed Below the 4 Buttons */
+        .hint-btn {
+            background: rgba(214, 31, 18, 0.35);
+            color: #f6f0f0;
+            border: 1px solid rgba(211, 28, 15, 0.6);
+            padding: 0.8rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(146, 20, 12, 0.3);
+            transition: all 0.3s ease;
+            letter-spacing: 0.08em;
+            margin-top: 0.5rem;
+        }
+
+        .hint-btn:hover {
+            background: rgba(214, 31, 18, 0.6);
+            border-color: #bc8a1d;
+            box-shadow: 0 0 18px rgba(188, 138, 29, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 850px) {
+            .interactive-container {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+
+            .left-panel {
+                width: 100%;
+            }
+
+            .video-box {
+                height: 240px;
+            }
+
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================== SECTION 1 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 1</h2>
+                <div class="video-box">
+                    <video src="sample-video1.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 2 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 2</h2>
+                <div class="video-box">
+                    <video src="sample-video2.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 3 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 3</h2>
+                <div class="video-box">
+                    <video src="sample-video3.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 4 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 4</h2>
+                <div class="video-box">
+                    <video src="sample-video4.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 5 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 5</h2>
+                <div class="video-box">
+                    <video src="sample-video5.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SECTION 6 ==================== -->
+    <div class="interactive-section-wrapper">
+        <div class="interactive-container">
+            <div class="left-panel">
+                <h2 class="video-header">VIDEO 6</h2>
+                <div class="video-box">
+                    <video src="sample-video6.mp4" autoplay muted loop playsinline></video>
+                </div>
+            </div>
+
+            <div class="options-panel">
+                <div class="buttons-grid">
+                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
+                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+                </div>
+                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle HINT reveal for specific section
+        function toggleHint(btnElement) {
+            const panel = btnElement.closest('.options-panel');
+            panel.classList.toggle('revealed');
+
+            if (panel.classList.contains('revealed')) {
+                btnElement.textContent = 'HIDE HINT';
+            } else {
+                btnElement.textContent = 'HINT';
+            }
+        }
+
+        // Scroll reveal slide-up animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrappers = document.querySelectorAll('.interactive-section-wrapper');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            wrappers.forEach(wrapper => observer.observe(wrapper));
+        });
+    </script>
+
+</body>
+</html>
