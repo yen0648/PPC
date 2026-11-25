@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Time - Digital Culture & Online Behavior</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #321315 0%, #24191c 45%, #1e1e24 100%);
+            background-color: #1e1e24;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            padding: 36px 20px;
+            color: #fff8f0;
+            text-align: center;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            color: #f6f0f0;
+            background: rgba(214, 31, 18, 0.25);
+            border: 1px solid rgba(211, 28, 15, 0.45);
+            display: inline-block;
+            padding: 0.85rem 2.4rem;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        @property --angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateBorder {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Top Duration Selector Bar */
+        .top-bar-wrapper {
+            max-width: 960px;
+            width: 100%;
+            border-radius: 22px;
+            padding: 4px;
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            animation: rotateBorder 4s linear infinite;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+            margin-bottom: 1.75rem;
+        }
+
+        .top-bar-card {
+            background-color: rgba(30, 30, 36, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 1.25rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .mode-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #f5c451;
+            text-transform: uppercase;
+        }
+
+        .duration-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .duration-btn {
+            padding: 0.7rem 1.45rem;
+            font-size: 0.98rem;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #fff8f0;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(188, 138, 29, 0.45);
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .duration-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+            border-color: #f5c451;
+            background: rgba(188, 138, 29, 0.25);
+        }
+
+        .duration-btn.active {
+            background: linear-gradient(135deg, #92140c 0%, #bc8a1d 100%);
+            border-color: #f5c451;
+            color: #fff8f0;
+            box-shadow: 0 0 16px rgba(188, 138, 29, 0.45);
+        }
+
+        .score-pill {
+            background: rgba(15, 15, 20, 0.7);
+            border: 1px solid rgba(188, 138, 29, 0.45);
+            padding: 0.7rem 1.35rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #f5c451;
+        }
+
+        /* Combined Timer + Question + 2x2 Choices Card */
+        .quiz-stage-wrapper {
+            max-width: 960px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 4px;
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            animation: rotateBorder 4s linear infinite, popIn 0.35s ease-out;
+            box-shadow: 0 22px 55px rgba(0, 0, 0, 0.65);
+            margin-bottom: 1.75rem;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .quiz-stage-card {
+            background-color: rgba(30, 30, 36, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+
+        .stage-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(188, 138, 29, 0.28);
+        }
+
+        .stage-info-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.45rem;
+            text-align: left;
+        }
+
+        .question-badge {
+            background: rgba(214, 31, 18, 0.28);
+            border: 1px solid rgba(214, 48, 38, 0.55);
+            color: #ffb3ae;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .status-note {
+            font-size: 0.92rem;
+            color: #e6dbd9;
+            font-weight: 600;
+        }
+
+        .countdown-box {
+            background: rgba(15, 15, 20, 0.85);
+            border: 1.5px solid rgba(214, 48, 38, 0.6);
+            padding: 0.65rem 1.6rem;
+            border-radius: 14px;
+            min-width: 150px;
+            box-shadow: 0 0 18px rgba(214, 48, 38, 0.22);
+        }
+
+        .countdown-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #f5c451;
+            text-transform: uppercase;
+        }
+
+        .countdown-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+            color: #ff9e99;
+            text-shadow: 0 0 8px rgba(214, 48, 38, 0.55);
+        }
+
+        .countdown-value.urgent {
+            color: #ff594f;
+            text-shadow: 0 0 12px rgba(255, 59, 48, 0.85);
+        }
+
+        .question-prompt {
+            font-size: 1.45rem;
+            font-weight: 800;
+            line-height: 1.45;
+            color: #fff8f0;
+            text-align: left;
+            padding: 1.25rem 1.5rem;
+            background: rgba(15, 15, 20, 0.62);
+            border-radius: 16px;
+            border: 1px solid rgba(188, 138, 29, 0.35);
+        }
+
+        /* 2x2 Choices Grid */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.15rem;
+            width: 100%;
+        }
+
+        .choice-btn {
+            background: rgba(20, 20, 26, 0.85);
+            color: #fff8f0;
+            border: 1.5px solid rgba(188, 138, 29, 0.45);
+            border-radius: 16px;
+            padding: 1.25rem 1.35rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            line-height: 1.4;
+            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+                        border-color 0.25s ease,
+                        background 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            border-color: #f5c451;
+            background: linear-gradient(135deg, rgba(146, 20, 12, 0.55) 0%, rgba(30, 30, 36, 0.95) 100%);
+            box-shadow: 0 0 18px rgba(188, 138, 29, 0.35);
+        }
+
+        .choice-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .choice-letter {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+            color: #f5c451;
+            background: rgba(188, 138, 29, 0.16);
+            border: 1px solid rgba(188, 138, 29, 0.45);
+        }
+
+        .choice-btn.correct {
+            border-color: #4cd97b;
+            background: rgba(34, 120, 68, 0.35);
+            box-shadow: 0 0 18px rgba(76, 217, 123, 0.3);
+        }
+
+        .choice-btn.wrong {
+            border-color: #ff594f;
+            background: rgba(180, 32, 24, 0.38);
+            box-shadow: 0 0 18px rgba(255, 89, 79, 0.3);
+        }
+
+        .choice-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            min-height: 54px;
+            padding: 0.9rem 1.25rem;
+            border-radius: 14px;
+            background: rgba(15, 15, 20, 0.65);
+            border: 1px solid rgba(188, 138, 29, 0.3);
+            color: #f6f0f0;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stage-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.85rem 1.85rem;
+            font-size: 0.98rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #fff8f0;
+            background: linear-gradient(135deg, #92140c 0%, #bc8a1d 100%);
+            border: 1.5px solid #e3b247;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 18px rgba(188, 138, 29, 0.45);
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Q1 - Q10 Buttons Below Question & Answer */
+        .question-nav-section {
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .nav-section-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #f5c451;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        .question-nav-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        .q-select-btn {
+            padding: 0.85rem 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #fff8f0;
+            background: rgba(30, 30, 36, 0.88);
+            border: 1.5px solid rgba(188, 138, 29, 0.4);
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .q-select-btn:hover {
+            transform: translateY(-2px);
+            border-color: #f5c451;
+            background: rgba(146, 20, 12, 0.35);
+        }
+
+        .q-select-btn.active {
+            background: linear-gradient(135deg, #92140c 0%, #bc8a1d 100%);
+            border-color: #f5c451;
+            box-shadow: 0 0 18px rgba(188, 138, 29, 0.5);
+        }
+
+        .q-select-btn.answered-correct {
+            border-color: #4cd97b;
+            box-shadow: inset 0 0 10px rgba(76, 217, 123, 0.22);
+        }
+
+        .q-select-btn.answered-wrong {
+            border-color: #ff6b63;
+            box-shadow: inset 0 0 10px rgba(255, 107, 99, 0.22);
+        }
+
+        @media (max-width: 768px) {
+            .question-nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .choices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-prompt {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 class="header">QUIZ TIME!</h1>
+
+    <div class="top-bar-wrapper">
+        <div class="top-bar-card">
+            <div class="mode-group">
+                <span class="mode-label">Choose Timer Duration to Reveal & Start</span>
+                <div class="duration-buttons">
+                    <button type="button" class="duration-btn" id="dur-30" onclick="startWithDuration(30)">30 Seconds</button>
+                    <button type="button" class="duration-btn" id="dur-45" onclick="startWithDuration(45)">45 Seconds</button>
+                </div>
+            </div>
+
+            <div class="score-pill" id="score-pill">Score: 0 / 10</div>
+        </div>
+    </div>
+
+    <div class="quiz-stage-wrapper hidden" id="quiz-stage-wrapper">
+        <div class="quiz-stage-card">
+            <div class="stage-top-row">
+                <div class="stage-info-left">
+                    <span class="question-badge" id="question-badge">Question 1 of 10</span>
+                    <span class="status-note" id="status-note">Timer running</span>
+                </div>
+
+                <div class="countdown-box" id="countdown-box">
+                    <span class="countdown-label" id="countdown-label">Time Left</span>
+                    <span class="countdown-value" id="countdown-value">30s</span>
+                </div>
+            </div>
+
+            <div class="question-prompt" id="question-prompt"></div>
+
+            <div class="choices-grid" id="choices-grid"></div>
+
+            <div class="feedback-box" id="feedback-box"></div>
+
+            <div class="stage-actions">
+                <button type="button" class="action-btn secondary-btn" onclick="restartQuiz()">RESTART QUIZ</button>
+                <button type="button" class="action-btn" onclick="goToNextQuestion()">NEXT QUESTION</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-nav-section">
+        <span class="nav-section-label">Questions (Q1 – Q10)</span>
+        <div class="question-nav-grid" id="question-nav-grid"></div>
+    </div>
+
+    <script>
+        const quizQuestions = [
+            {
+                question: "Which meme category is defined in the lesson by using humor, irony, or satire to react to government leaders, laws, or current issues?",
+                choices: [
+                    "Social memes",
+                    "Political memes",
+                    "Cultural memes",
+                    "Civic memes"
+                ],
+                answerIndex: 1,
+                explanation: "Political memes use humor, irony, or satire to express reactions, opinions, or criticism on government leaders, laws, policies, and current issues."
+            },
+            {
+                question: "Which character and movie are paired with the meme “Bakit parang kasalanan ko?” in the lesson?",
+                choices: [
+                    "Bobbie Salazar in Four Sisters and a Wedding",
+                    "Bobby Salazar in Four Sisters and the Wedding",
+                    "Bobbie Salasar in Five Sisters and a Wedding",
+                    "Bobbie Salazar in Four Sisters Before the Wedding"
+                ],
+                answerIndex: 0,
+                explanation: "Bea Alonzo plays Bobbie Salazar in Four Sisters and a Wedding (2013), delivering the line that went viral around 2017."
+            },
+            {
+                question: "Which creator is behind the meme “Jusko po, Jusko po!” in the lesson?",
+                choices: [
+                    "Armman Salon",
+                    "Arman Sallon",
+                    "Anman Saylon",
+                    "Arman Salon"
+                ],
+                answerIndex: 3,
+                explanation: "Arman Salon is the exact name in the lesson for the creator known for comedic, exaggerated skits and “Jusko po, Jusko po!”."
+            },
+            {
+                question: "Which meme comes from a 2013 performance by Christopher Diwata on It’s Showtime’s “Kalokalike” segment?",
+                choices: [
+                    "“What hafen, Vella?”",
+                    "“What happen, Vella?”",
+                    "“What hafen, Bella?”",
+                    "“What hafpen, Vella?”"
+                ],
+                answerIndex: 0,
+                explanation: "Christopher Diwata impersonated Taylor Lautner on 'Kalokalike' in 2013, producing the “What hafen, Vella?” clip."
+            },
+            {
+                question: "Which group did Cong TV (Lincoln Velasquez) found, and what is his role in the band COLN?",
+                choices: [
+                    "He founded Team Payaman and serves as the vocalist of COLN",
+                    "He founded #TeamLyqa and serves as the drummer of COLN",
+                    "He founded FEATR and serves as the bassist of COLN",
+                    "He founded Kalokalike and serves as the guitarist of COLN"
+                ],
+                answerIndex: 0,
+                explanation: "Cong TV founded Team Payaman and serves as the vocalist of COLN."
+            },
+            {
+                question: "Which viral challenge helped Mimiyuuuh (Jeremy Sancebuche) rise to fame in 2019?",
+                choices: [
+                    "The “Dalagang Pilipina” challenge",
+                    "The “Kalokalike” challenge",
+                    "The “Keratin Plus” challenge",
+                    "The “Balota” challenge"
+                ],
+                answerIndex: 0,
+                explanation: "Mimiyuuuh rose to fame in 2019 through the viral video challenge for “Dalagang Pilipina” by ALLMO$T."
+            },
+            {
+                question: "Which title is Sassa Gurl (Felix Petate) known as in the lesson?",
+                choices: [
+                    "“Pambansang Mima”",
+                    "“The People’s Ghorl”",
+                    "“Favorite Pinoy Internet Star”",
+                    "“NextUp Winner”"
+                ],
+                answerIndex: 0,
+                explanation: "Sassa Gurl is known in the lesson as “Pambansang Mima”."
+            },
+            {
+                question: "Which digital channel showcases Filipino cuisine and food stories through documentary-style videos by Erwan Heussaff?",
+                choices: [
+                    "FEATR",
+                    "Team Payaman",
+                    "#TeamLyqa",
+                    "Kalokalike"
+                ],
+                answerIndex: 0,
+                explanation: "Erwan Heussaff showcases Filipino cuisine and food stories through documentary-style videos on his channel FEATR."
+            },
+            {
+                question: "Which creator is described as a licensed pharmacist who creates safe medicine content and made Forbes’ “30 Under 30 Asia” in 2024?",
+                choices: [
+                    "Arshie Larga (Ramon Christian Larga)",
+                    "Archie Larga (Ramon Christian Larga)",
+                    "Arshie Larga (Ramon Cristopher Larga)",
+                    "Arshie Largo (Ramon Christian Largo)"
+                ],
+                answerIndex: 0,
+                explanation: "Ramon Christian Larga (Arshie Larga) is the licensed pharmacist on TikTok recognized on Forbes' 2024 “30 Under 30 Asia” list."
+            },
+            {
+                question: "What does the lesson describe as “cancel culture”?",
+                choices: [
+                    "Publicly criticizing, boycotting, or withdrawing support from individuals, groups, or brands over perceived offensive actions or statements",
+                    "A system that automatically removes inactive social media accounts every year",
+                    "A rule that blocks creators from posting political or cultural memes",
+                    "A method for verifying sources before sharing a post online"
+                ],
+                answerIndex: 0,
+                explanation: "Cancel culture refers to publicly criticizing, boycotting, or withdrawing support from individuals, groups, or brands over perceived offensive actions or statements."
+            }
+        ];
+
+        const letters = ["A", "B", "C", "D"];
+
+        let selectedDuration = null;
+        let currentIndex = 0;
+        let timeLeft = null;
+        let timerId = null;
+        let userAnswers = Array(quizQuestions.length).fill(null);
+
+        function stopTimer() {
+            clearInterval(timerId);
+            timerId = null;
+        }
+
+        function renderCountdown() {
+            const labelEl = document.getElementById("countdown-label");
+            const valEl = document.getElementById("countdown-value");
+
+            labelEl.textContent = `${selectedDuration}s Timer`;
+            valEl.textContent = `${timeLeft}s`;
+            valEl.classList.toggle("urgent", timeLeft <= 5);
+        }
+
+        function startTimerLoop() {
+            stopTimer();
+            timeLeft = selectedDuration;
+            renderCountdown();
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                renderCountdown();
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    goToNextQuestion(true);
+                }
+            }, 1000);
+        }
+
+        function startWithDuration(seconds) {
+            selectedDuration = seconds;
+            document.getElementById("dur-30").classList.toggle("active", seconds === 30);
+            document.getElementById("dur-45").classList.toggle("active", seconds === 45);
+
+            document.getElementById("quiz-stage-wrapper").classList.remove("hidden");
+
+            renderQuestionContent(currentIndex);
+            startTimerLoop();
+            document.getElementById("status-note").textContent = `${seconds}-second timer active for Question ${currentIndex + 1}`;
+        }
+
+        function buildQuestionNav() {
+            const navGrid = document.getElementById("question-nav-grid");
+            navGrid.innerHTML = "";
+
+            quizQuestions.forEach((item, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "q-select-btn";
+                btn.textContent = `Q${idx + 1}`;
+
+                if (idx === currentIndex) {
+                    btn.classList.add("active");
+                }
+
+                const chosen = userAnswers[idx];
+                if (chosen !== null) {
+                    if (chosen === item.answerIndex) {
+                        btn.classList.add("answered-correct");
+                    } else {
+                        btn.classList.add("answered-wrong");
+                    }
+                }
+
+                btn.onclick = () => selectQuestion(idx);
+                navGrid.appendChild(btn);
+            });
+        }
+
+        function updateScorePill() {
+            const score = userAnswers.reduce((acc, chosen, idx) => {
+                return acc + (chosen === quizQuestions[idx].answerIndex ? 1 : 0);
+            }, 0);
+            document.getElementById("score-pill").textContent = `Score: ${score} / ${quizQuestions.length}`;
+        }
+
+        function renderQuestionContent(index) {
+            currentIndex = index;
+            const q = quizQuestions[currentIndex];
+            const chosen = userAnswers[currentIndex];
+
+            document.getElementById("question-badge").textContent = `Question ${currentIndex + 1} of ${quizQuestions.length}`;
+            document.getElementById("question-prompt").textContent = q.question;
+
+            const choicesGrid = document.getElementById("choices-grid");
+            choicesGrid.innerHTML = "";
+
+            q.choices.forEach((choiceText, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "choice-btn";
+
+                const badge = document.createElement("span");
+                badge.className = "choice-letter";
+                badge.textContent = letters[idx];
+
+                const label = document.createElement("span");
+                label.textContent = choiceText;
+
+                btn.appendChild(badge);
+                btn.appendChild(label);
+
+                if (chosen !== null) {
+                    btn.disabled = true;
+                    if (idx === q.answerIndex) {
+                        btn.classList.add("correct");
+                    } else if (idx === chosen) {
+                        btn.classList.add("wrong");
+                    }
+                } else {
+                    btn.onclick = () => selectChoice(idx);
+                }
+
+                choicesGrid.appendChild(btn);
+            });
+
+            const feedbackBox = document.getElementById("feedback-box");
+            if (chosen !== null) {
+                const isRight = chosen === q.answerIndex;
+                feedbackBox.innerHTML = `<span><strong>${isRight ? "Correct!" : "Not quite."}</strong> ${q.explanation}</span>`;
+            } else {
+                feedbackBox.innerHTML = `<span><strong>${selectedDuration}s timer running</strong> for Question ${currentIndex + 1}. When time reaches <strong>0s</strong>, it automatically moves to Question ${((currentIndex + 1) % quizQuestions.length) + 1}.</span>`;
+            }
+
+            buildQuestionNav();
+            updateScorePill();
+        }
+
+        function selectQuestion(index) {
+            currentIndex = index;
+            buildQuestionNav();
+
+            if (selectedDuration !== null) {
+                renderQuestionContent(index);
+                startTimerLoop();
+                document.getElementById("status-note").textContent = `${selectedDuration}-second timer active for Question ${index + 1}`;
+            }
+        }
+
+        function selectChoice(choiceIndex) {
+            if (userAnswers[currentIndex] !== null) return;
+
+            userAnswers[currentIndex] = choiceIndex;
+            const q = quizQuestions[currentIndex];
+            const isRight = choiceIndex === q.answerIndex;
+
+            const buttons = document.querySelectorAll(".choice-btn");
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.answerIndex) {
+                    btn.classList.add("correct");
+                } else if (idx === choiceIndex) {
+                    btn.classList.add("wrong");
+                }
+            });
+
+            document.getElementById("feedback-box").innerHTML =
+                `<span><strong>${isRight ? "Correct!" : "Incorrect."}</strong> ${q.explanation}</span>`;
+
+            buildQuestionNav();
+            updateScorePill();
+        }
+
+        function goToNextQuestion(fromTimeout = false) {
+            const nextIndex = (currentIndex + 1) % quizQuestions.length;
+            renderQuestionContent(nextIndex);
+            startTimerLoop();
+
+            if (fromTimeout) {
+                document.getElementById("status-note").textContent =
+                    `Time ran out on Q${currentIndex === 0 ? quizQuestions.length : currentIndex} — moved to Q${nextIndex + 1}`;
+            } else {
+                document.getElementById("status-note").textContent =
+                    `${selectedDuration}-second timer active for Question ${nextIndex + 1}`;
+            }
+        }
+
+        function restartQuiz() {
+            stopTimer();
+            selectedDuration = null;
+            timeLeft = null;
+            currentIndex = 0;
+            userAnswers = Array(quizQuestions.length).fill(null);
+
+            document.getElementById("dur-30").classList.remove("active");
+            document.getElementById("dur-45").classList.remove("active");
+            document.getElementById("quiz-stage-wrapper").classList.add("hidden");
+
+            buildQuestionNav();
+            updateScorePill();
+        }
+
+        buildQuestionNav();
+        updateScorePill();
+    </script>
+
+</body>
+</html>
