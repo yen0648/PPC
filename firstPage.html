@@ -13,9 +13,9 @@
         }
 
         body {
-            /* Vertical gradient matching the theme's vibe */
+
             background: linear-gradient(to bottom, #321315 0%, #24191c 45%, #1e1e24 100%);
-            background-color: #1e1e24; /* Fallback */
+            background-color: #1e1e24; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             padding: 40px 20px;
@@ -37,7 +37,7 @@
             margin-bottom: 2.5rem;
         }
 
-        /* Centered Grid for Cards */
+
         .cards-container {
             display: flex;
             gap: 24px;
@@ -48,33 +48,33 @@
             align-items: stretch;
             flex-wrap: wrap;
 
-            /* Slide Up Initial Animation State */
+
             opacity: 0;
             transform: translateY(60px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
-        /* Active state when scrolled into view */
+
         .cards-container.show {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Register custom property so angle rotates smoothly across browsers */
+
         @property --angle {
             syntax: "<angle>";
             initial-value: 0deg;
             inherits: false;
         }
 
-        /* Card Wrapper with moving border */
+
         .card-wrapper {
             position: relative;
             flex: 1;
             min-width: 280px;
             max-width: 360px;
             border-radius: 22px;
-            padding: 4px; /* Border thickness */
+            padding: 4px;
             display: flex;
             flex-direction: column;
             
@@ -96,7 +96,7 @@
             }
         }
 
-        /* Inner container card */
+
         .container {
             background-color: rgba(30, 30, 36, 0.92);
             backdrop-filter: blur(12px);
@@ -112,7 +112,7 @@
             gap: 1.2rem;
         }
 
-        /* Uniform circle container for icons */
+
         .card-icon {
             width: 60px;
             height: 60px;
@@ -126,7 +126,7 @@
             box-shadow: 0 4px 15px rgba(146, 20, 12, 0.3);
         }
 
-        /* Standardized image size and leveling across all icons */
+
         .card-icon img {
             width: 32px;
             height: 32px;
@@ -146,7 +146,6 @@
             color: #1e1e24;
         }
 
-        /* ==================== FEATURED SECTION STYLES ==================== */
         .featured-section-wrapper {
             position: relative;
             max-width: 1200px;
@@ -164,7 +163,7 @@
             animation: rotateBorder 4s linear infinite;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
 
-            /* Slide Up Animation Initial State */
+
             opacity: 0;
             transform: translateY(60px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -187,7 +186,7 @@
             text-align: left;
         }
 
-        /* Image Box Slider Container */
+
         .slider-box {
             position: relative;
             flex: 1;
@@ -214,7 +213,7 @@
             flex-shrink: 0;
         }
 
-        /* Video Box Container with Slight Glowing Border Effect */
+
         .video-box {
             position: relative;
             flex: 1;
@@ -222,7 +221,7 @@
             height: 320px;
             border-radius: 16px;
             overflow: hidden;
-            /* Slight glowing border effect using shadow and border tint */
+
             border: 1.5px solid rgba(243, 243, 243, 0.6);
             box-shadow: 0 0 18px rgba(214, 8, 87, 0.25), 0 8px 25px rgba(0, 0, 0, 0.5);
             background: #000;
@@ -238,7 +237,7 @@
             display: block;
         }
 
-        /* Slider Controls */
+
         .slider-btn {
             position: absolute;
             top: 50%;
@@ -320,7 +319,7 @@
             font-weight: bold;
         }
 
-        /* Responsive layout for smaller screens */
+
         @media (max-width: 850px) {
             .featured-container {
                 flex-direction: column !important;
@@ -337,6 +336,163 @@
                 font-size: 1.8rem;
             }
         }
+
+        @property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotateBorder {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.featured-video-wrapper {
+    position: relative;
+    max-width: 960px;
+    width: 100%;
+    margin: 2.5rem auto;
+    border-radius: 24px;
+    padding: 4px;
+    background: conic-gradient(
+        from var(--angle),
+        #92140c,
+        #bc8a1d 40%,
+        #92140c 70%,
+        #1e1e24
+    );
+    animation: rotateBorder 4s linear infinite;
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.65);
+}
+
+.featured-video-card {
+    background-color: rgba(30, 30, 36, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.35rem;
+}
+
+.featured-video-box {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 540px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0f0f14;
+    border: 1.5px solid rgba(188, 138, 29, 0.55);
+    box-shadow: 0 0 20px rgba(146, 20, 12, 0.35), inset 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+.featured-video-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.featured-video-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.video-ctrl-btn {
+    min-width: 140px;
+    padding: 0.85rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #fff8f0;
+    background: linear-gradient(135deg, rgba(146, 20, 12, 0.65) 0%, rgba(30, 30, 36, 0.95) 100%);
+    border: 1.5px solid rgba(188, 138, 29, 0.65);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease,
+                background 0.3s ease;
+}
+
+.video-ctrl-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    border-color: #f5c451;
+    background: linear-gradient(135deg, rgba(214, 31, 18, 0.75) 0%, rgba(188, 138, 29, 0.45) 100%);
+    box-shadow: 0 0 18px rgba(188, 138, 29, 0.45);
+}
+
+.video-ctrl-btn:active {
+    transform: scale(0.97);
+}
+
+.video-ctrl-btn.is-active {
+    border-color: #ff9e99;
+    color: #ffb3ae;
+    box-shadow: 0 0 16px rgba(214, 48, 38, 0.45);
+}
+
+@media (max-width: 768px) {
+    .featured-video-card {
+        padding: 1.1rem;
+    }
+
+    .video-ctrl-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+.padded-button-div {
+    padding: 2rem;
+    max-width: 960px;
+    width: 100%;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(30, 30, 36, 0.92);
+    border: 1.5px solid rgba(188, 138, 29, 0.55);
+    border-radius: 18px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5);
+}
+
+.centered-theme-btn {
+    padding: 0.9rem 2.2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff8f0;
+    background: linear-gradient(135deg, #92140c 0%, #bc8a1d 100%);
+    border: 1.5px solid #e3b247;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.centered-theme-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    border-color: #f5c451;
+    background: linear-gradient(135deg, #c00000b7 0%, #c00000b7 100%);
+    box-shadow: 0 0 18px rgba(188, 138, 29, 0.45);
+}
+
+.centered-theme-btn:active {
+    transform: scale(0.98);
+}
+
     </style>
 </head>
 
@@ -344,7 +500,7 @@
     <h1 class="header">DIGITAL CULTURE AND ONLINE BEHAVIOR</h1>
 
     <div class="cards-container">
-        <!-- Div 1 -->
+
         <div class="card-wrapper">
             <div class="container">
                 <div class="card-icon">
@@ -354,7 +510,7 @@
             </div>
         </div>
 
-        <!-- Div 2 -->
+
         <div class="card-wrapper">
             <div class="container">
                 <div class="card-icon">
@@ -364,7 +520,7 @@
             </div>
         </div>
 
-        <!-- Div 3 -->
+
         <div class="card-wrapper">
             <div class="container">
                 <div class="card-icon">
@@ -376,9 +532,9 @@
     </div>
 
     <br> <br> <br>
-    <!--STARTTTTTT-->
 
-    <!-- TOP SLIDER 1: SLIDER ON LEFT, TEXT ON RIGHT -->
+
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="slider-box">
@@ -402,7 +558,7 @@
         </div>
     </div>
 
-    <!-- TOP SLIDER 2: TEXT ON LEFT, SLIDER ON RIGHT -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -425,7 +581,7 @@
 
     <h1 class="header">DIFFERENT TYPES OF MEMES</h1>
 
-    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -434,16 +590,16 @@
             </div>
 
             <div class="video-box">
-                <video src="socialmeme.mp4" autoplay muted loop playsinline preload="metadata"></video>
+                <video src="socialmeme.mp4" autoplay muted loop playsinline></video>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
-                <video src="politicalmeme.mp4" autoplay muted loop playsinline preload="metadata"></video>
+                <video src="politicalmeme.mp4" autoplay muted loop playsinline></video>
             </div>
 
             <div class="featured-content">
@@ -453,7 +609,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -462,7 +618,7 @@
             </div>
 
             <div class="video-box">
-                <video src="culturalmeme.mp4" autoplay muted loop playsinline preload="metadata"></video>
+                <video src="culturalmeme.mp4" autoplay muted loop playsinline></video>
             </div>
         </div>
     </div>
@@ -490,7 +646,7 @@
         </div>
     </div>
 
-        <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -499,16 +655,16 @@
             </div>
 
             <div class="video-box">
-                <video src="filmeme1.mp4" controls loop playsinline preload="metadata"></video>
+                <video src="filmeme1.mp4" controls loop playsinline></video>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
-                <video src="filmeme2.mp4" controls loop playsinline preload="metadata"></video>
+                <video src="filmeme2.mp4" controls loop playsinline></video>
             </div>
 
             <div class="featured-content">
@@ -518,7 +674,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -527,7 +683,7 @@
             </div>
 
             <div class="video-box">
-                <video src="filmeme3.mp4" controls loop playsinline preload="metadata"></video>
+                <video src="filmeme3.mp4" controls loop playsinline></video>
             </div>
         </div>
     </div>
@@ -535,7 +691,7 @@
    <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
-                <video src="filmeme4.mp4" controls loop playsinline preload="metadata"></video>
+                <video src="filmeme4.mp4" controls loop playsinline></video>
             </div>
 
             <div class="featured-content">
@@ -577,7 +733,7 @@
 
     <h1 class="header">FILIPINO INFLUENCERS</h1>
 
-    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -591,7 +747,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
@@ -605,7 +761,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -627,7 +783,7 @@
 
             <div class="featured-content">
                 <h1>Sassa Gurl (Felix Petate)</h1>
-                <p>Became popular in 2020 during the pandemic for her <span class="bold">funny TikTok skits.</span> She later appeared in Drag Den (2022) and made history as the <span class="bold">first LGBTQIA+ calendar model for White Castle Whisky in 2022.</span> In 2024, she starred in the political thriller film Balota. Known as the “Pambansang Mima,” Sassa Gurl is admired for her versatile fashion sense and bold style choices</p>
+                <p>Became popular in 2020 during the pandemic for her <span class="bold">funny TikTok skits.</span> She later appeared in Drag Den (2022) and made history as the <span class="bold">first LGBTQIA+ calendar model for White Castle Whisky in 2022.</span> In 2024, she starred in the political thriller film Balota. Known as the <span class="bold">“Pambansang Mima,”</span> Sassa Gurl is admired for her versatile fashion sense and bold style choices</p>
             </div>
         </div>
     </div>
@@ -645,7 +801,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
@@ -654,7 +810,7 @@
 
             <div class="featured-content">
                 <h1>Erwan Heussaff</h1>
-                <p>A <span class="bold">Filipino-French content creator, chef, and entrepreneur</span> known for showcasing Filipino cuisine and culture through his digital video channel named FEATR. His documentary-style videos highlight local food stories and traditions. He won the <span class="bold">Social Media Category of the James Beard Broadcast Media Awards for his Instagram account.</span></p>
+                <p>A <span class="bold">Filipino-French content creator, chef, and entrepreneur</span> known for showcasing Filipino cuisine and culture through his digital video channel named <span class="bold">FEATR</span>. His documentary-style videos highlight local food stories and traditions. He won the <span class="bold">Social Media Category of the James Beard Broadcast Media Awards for his Instagram account.</span></p>
             </div>
         </div>
     </div>
@@ -688,7 +844,7 @@
 
     <h1 class="header">FILIPINO INFLUENCERS</h1>
 
-    <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -702,7 +858,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 2: VIDEO (Left) + DIV (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="video-box">
@@ -716,7 +872,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SECTION 3: DIV (Left) + VIDEO (Right) -->
+
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -776,7 +932,6 @@
         </div>
     </div>
 
-        <!-- BOTTOM SECTION 1: DIV (Left) + VIDEO (Right) -->
     <div class="featured-section-wrapper">
         <div class="featured-container">
             <div class="featured-content">
@@ -803,11 +958,30 @@
         </div>
     </div>
 
+    <div class="featured-video-wrapper">
+    <div class="featured-video-card">
+        <div class="featured-video-box">
+            <video id="main-feature-video" src="endvid.mp4" loop playsinline preload="metadata"></video>
+        </div>
+
+        <div class="featured-video-controls">
+            <button type="button" class="video-ctrl-btn" id="toggle-play-btn" onclick="toggleVideoPlay()">PAUSE</button>
+            <button type="button" class="video-ctrl-btn" id="toggle-mute-btn" onclick="toggleVideoMute()">UNMUTE</button>
+        </div>
+    </div>
+</div>
+
+<div class="padded-button-div">
+    <a href="quizpage.html"><button type="button" class="centered-theme-btn">NEXT PAGE</button></a>
+</div>
+
+
+
 
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Scroll Reveal Observer
+
             const animatableElements = document.querySelectorAll('.cards-container, .featured-section-wrapper');
 
             const observer = new IntersectionObserver((entries) => {
@@ -821,7 +995,6 @@
 
             animatableElements.forEach(el => observer.observe(el));
 
-            // 2. Multi-Slider Controller Initialization
             const sliderBoxes = document.querySelectorAll('.slider-box');
 
             sliderBoxes.forEach((sliderBox) => {
@@ -835,7 +1008,6 @@
 
                 let currentIndex = 0;
 
-                // Dynamically build dot indicators for each slider
                 slides.forEach((_, idx) => {
                     const dot = document.createElement('div');
                     dot.classList.add('dot');
@@ -871,14 +1043,42 @@
                 nextBtn.addEventListener('click', nextSlide);
                 prevBtn.addEventListener('click', prevSlide);
 
-                // Auto slide loop every 2.5 seconds
                 let autoSlide = setInterval(nextSlide, 2500);
 
-                // Pause auto-sliding on hover
                 sliderBox.addEventListener('mouseenter', () => clearInterval(autoSlide));
                 sliderBox.addEventListener('mouseleave', () => autoSlide = setInterval(nextSlide, 2500));
             });
         });
+
+        function toggleVideoPlay() {
+        const video = document.getElementById('main-feature-video');
+        const btn = document.getElementById('toggle-play-btn');
+
+        if (video.paused) {
+            video.play();
+            btn.textContent = 'PAUSE';
+            btn.classList.remove('is-active');
+        } else {
+            video.pause();
+            btn.textContent = 'PLAY';
+            btn.classList.add('is-active');
+        }
+    }
+
+    function toggleVideoMute() {
+        const video = document.getElementById('main-feature-video');
+        const btn = document.getElementById('toggle-mute-btn');
+
+        video.muted = !video.muted;
+
+        if (video.muted) {
+            btn.textContent = 'UNMUTE';
+            btn.classList.remove('is-active');
+        } else {
+            btn.textContent = 'MUTE';
+            btn.classList.add('is-active');
+        }
+    }
     </script>
 </body>
 </html>
