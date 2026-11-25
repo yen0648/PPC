@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Culture & Online Behavior - Video Quiz</title>
+    <title>Icebreaker: Pinoy Henyo</title>
 
     <style>
         * {
@@ -13,7 +13,6 @@
         }
 
         body {
-            /* Theme background vertical gradient */
             background: linear-gradient(to bottom, #321315 0%, #24191c 45%, #1e1e24 100%);
             background-color: #1e1e24;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -21,6 +20,30 @@
             padding: 40px 20px;
             text-align: center;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header {
+            color: #f6f0f0;
+            background: rgba(214, 31, 18, 0.25);
+            border: 1px solid rgba(211, 28, 15, 0.4);
+            display: inline-block;
+            padding: 0.8rem 2.2rem;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .sub-header {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         @property --angle {
@@ -35,12 +58,104 @@
             }
         }
 
-        /* Outer Container Wrapper with Rotating Conic Gradient Border */
-        .interactive-section-wrapper {
-            position: relative;
+        /* ==================== PINOY HENYO RULES CARDS ==================== */
+        .cards-container {
+            display: flex;
+            gap: 24px;
             max-width: 1100px;
             width: 100%;
             margin: 0 auto 3.5rem auto;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .card-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            border-radius: 22px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            background: conic-gradient(
+                from var(--angle),
+                #92140c,
+                #bc8a1d 40%,
+                #92140c 70%,
+                #1e1e24
+            );
+            animation: rotateBorder 4s linear infinite;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .container {
+            background-color: rgba(30, 30, 36, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 2rem 1.8rem;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            background: rgba(204, 21, 8, 0.6);
+            border: 1px solid rgba(146, 20, 12, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(146, 20, 12, 0.3);
+            color: #fff8f0;
+        }
+
+        .rule-title {
+            color: #f5c451;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .container p {
+            color: #fff8f0;
+            font-size: 1.05rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .highlight-word {
+            color: #ff9e99;
+            font-weight: 700;
+        }
+
+        /* ==================== SIDE-BY-SIDE STOPWATCHES ==================== */
+        .stopwatches-wrapper {
+            display: flex;
+            gap: 2.5rem;
+            max-width: 1100px;
+            width: 100%;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .stopwatch-card-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 320px;
+            max-width: 500px;
             border-radius: 22px;
             padding: 4px;
             background: conic-gradient(
@@ -52,345 +167,588 @@
             );
             animation: rotateBorder 4s linear infinite;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-
-            /* Scroll Slide-Up Animation Initial State */
-            opacity: 0;
-            transform: translateY(60px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
 
-        .interactive-section-wrapper.show {
-            opacity: 1;
-            transform: translateY(0);
+        .stopwatch-card-wrapper.winner-card {
+            transform: scale(1.03);
+            background: conic-gradient(
+                from var(--angle),
+                #ff3b30,
+                #d61f12 35%,
+                #ff7870 65%,
+                #92140c
+            );
+            box-shadow: 0 0 35px rgba(255, 59, 48, 0.65);
         }
 
-        /* Glassmorphism Inner Container */
-        .interactive-container {
+        .stopwatch-card {
             background-color: rgba(30, 30, 36, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 18px;
-            padding: 2.5rem;
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Left Side: Title Header + Video Container */
-        .left-panel {
-            flex: 1;
-            min-width: 320px;
+            padding: 2.5rem 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
             align-items: center;
-        }
-
-        .video-header {
-            color: #f6f0f0;
-            background: rgba(214, 31, 18, 0.25);
-            border: 1px solid rgba(211, 28, 15, 0.4);
-            display: inline-block;
-            padding: 0.6rem 1.5rem;
-            border-radius: 10px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Glowing Video Container Box */
-        .video-box {
-            width: 100%;
-            height: 320px;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1.5px solid rgba(188, 138, 29, 0.6);
-            box-shadow: 0 0 18px rgba(188, 138, 29, 0.25), 0 8px 25px rgba(0, 0, 0, 0.5);
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-box video {
-            width: 100%;
+            gap: 1.4rem;
             height: 100%;
-            object-fit: cover;
-            display: block;
         }
 
-        /* Right Side: 4 Option Buttons + HINT Button Below */
-        .options-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            align-items: center;
-            width: 100%;
-        }
-
-        /* 2x2 Grid for the 4 Buttons */
-        .buttons-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        /* Always Visible Option Buttons */
-        .option-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(188, 138, 29, 0.3);
-            border-radius: 12px;
-            padding: 1.2rem;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .option-btn:hover {
-            border-color: #bc8a1d;
-            background: rgba(188, 138, 29, 0.15);
-            box-shadow: 0 0 15px rgba(188, 138, 29, 0.3);
-        }
-
-        /* Text Hidden Initially, Revealed via HINT Button */
-        .btn-text {
-            color: #fff8f0;
-            font-size: 1rem;
-            font-weight: 600;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            pointer-events: none;
-        }
-
-        /* Revealed State Styles */
-        .options-panel.revealed .btn-text {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .options-panel.revealed .option-btn {
-            background: rgba(30, 30, 36, 0.85);
-            border-color: rgba(188, 138, 29, 0.6);
-        }
-
-        /* HINT Toggle Button Placed Below the 4 Buttons */
-        .hint-btn {
-            background: rgba(214, 31, 18, 0.35);
+        .stopwatch-title {
             color: #f6f0f0;
-            border: 1px solid rgba(211, 28, 15, 0.6);
-            padding: 0.8rem 2.5rem;
-            font-size: 1.1rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #bc8a1d;
+            text-align: center;
+            padding-bottom: 6px;
+            width: 80%;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .stopwatch-title:focus {
+            border-bottom-color: #e06d66;
+        }
+
+        .time-display {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #ff9e99;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.04em;
+            text-shadow:
+                0 0 6px rgba(214, 48, 38, 0.55),
+                0 0 14px rgba(146, 20, 12, 0.45);
+            padding: 1rem 2rem;
+            background: rgba(15, 15, 20, 0.65);
+            border-radius: 16px;
+            border: 1px solid rgba(214, 48, 38, 0.35);
+            width: 100%;
+            transition: transform 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .time-display.running {
+            color: #ffb3ae;
+            text-shadow:
+                0 0 8px rgba(214, 48, 38, 0.65),
+                0 0 18px rgba(146, 20, 12, 0.5);
+        }
+
+        .add-time-btn {
+            background: rgba(214, 31, 18, 0.22);
+            color: #ff9e99;
+            border: 1px solid rgba(214, 48, 38, 0.5);
+            padding: 0.5rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-time-btn:hover {
+            background: rgba(214, 31, 18, 0.45);
+            border-color: #bc8a1d;
+            color: #fff8f0;
+            transform: translateY(-1px);
+        }
+
+        .add-time-btn:active {
+            transform: scale(0.96);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .ctrl-btn {
+            flex: 1;
+            padding: 0.85rem 0.8rem;
+            font-size: 0.95rem;
             font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(146, 20, 12, 0.3);
-            transition: all 0.3s ease;
-            letter-spacing: 0.08em;
-            margin-top: 0.5rem;
+            border: 1px solid transparent;
+            letter-spacing: 0.05em;
+            transition: all 0.25s ease;
         }
 
-        .hint-btn:hover {
-            background: rgba(214, 31, 18, 0.6);
+        .start-btn {
+            background: rgba(214, 31, 18, 0.45);
+            color: #f6f0f0;
+            border-color: rgba(211, 28, 15, 0.75);
+            box-shadow: 0 4px 15px rgba(146, 20, 12, 0.35);
+        }
+
+        .start-btn:hover {
+            background: rgba(214, 31, 18, 0.75);
             border-color: #bc8a1d;
-            box-shadow: 0 0 18px rgba(188, 138, 29, 0.5);
             transform: translateY(-2px);
         }
 
-        /* Responsive Mobile Layout */
-        @media (max-width: 850px) {
-            .interactive-container {
-                flex-direction: column;
-                padding: 1.5rem;
-            }
+        .pause-btn {
+            background: rgba(188, 138, 29, 0.25);
+            color: #f6f0f0;
+            border-color: rgba(188, 138, 29, 0.6);
+        }
 
-            .left-panel {
-                width: 100%;
-            }
+        .pause-btn:hover {
+            background: rgba(188, 138, 29, 0.45);
+            transform: translateY(-2px);
+        }
 
-            .video-box {
-                height: 240px;
-            }
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff8f0;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
-            .buttons-grid {
-                grid-template-columns: 1fr;
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        /* Global Sync Controls */
+        .global-controls {
+            margin-top: 2.2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .global-btn {
+            background: rgba(30, 30, 36, 0.9);
+            color: #bc8a1d;
+            border: 1.5px solid #bc8a1d;
+            padding: 0.85rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            letter-spacing: 0.06em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .global-btn:hover {
+            background: #bc8a1d;
+            color: #1e1e24;
+        }
+
+        /* Declare Winner Button & Red-Bordered Banner */
+        .winner-section {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 720px;
+        }
+
+        .declare-winner-btn {
+            background: linear-gradient(135deg, #92140c 0%, #bc8a1d 100%);
+            color: #fff8f0;
+            border: 1.5px solid #e3b247;
+            padding: 1rem 2.6rem;
+            font-size: 1.15rem;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .declare-winner-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 25px rgba(188, 138, 29, 0.6);
+        }
+
+        .winner-banner {
+            display: none;
+            background: rgba(30, 30, 36, 0.95);
+            border: 2px solid #ff3b30;
+            color: #fff8f0;
+            padding: 1.2rem 2rem;
+            border-radius: 14px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            box-shadow: 0 0 24px rgba(255, 59, 48, 0.45), 0 12px 35px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            animation: popIn 0.35s ease-out;
+        }
+
+        .winner-banner.show {
+            display: block;
+        }
+
+        .winner-highlight {
+            color: #ff7870;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
+
+        /* Confetti Celebration Layer */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 18px;
+            border-radius: 2px;
+            opacity: 0.95;
+            animation: confettiFall var(--fall-duration, 2.8s) linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-20px) rotate(0deg) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) rotate(360deg) translateX(var(--sway, 25px));
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(720deg) translateX(calc(var(--sway, 25px) * -1));
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .time-display {
+                font-size: 3.5rem;
+            }
+        }
+
+        .subhead2 {
+                        color: #f6f0f0;
+            background: rgba(255, 215, 13, 0.4);
+            border: 1px solid rgba(255, 204, 0, 0.716);
+            display: inline-block;
+            padding: 0.8rem 2.2rem;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        
+        .lessonbtn {
+            background: linear-gradient(135deg, #c00000b7 0%, #c00000b7 100%);
+            color: #ffffffe6;
+            border: 1.5px solid #cc7400;
+            padding: 1rem 2.6rem;
+            font-size: 1.15rem;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .lessonbtn:hover {
+            background: linear-gradient(135deg, #ffffffe6 0%, #ffffffe6 100%);
+            color: #c00000b7;
+            border-color: #cc7400;
+            /* Makes the button smoothly bigger */
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 14px 35px rgba(192, 0, 0, 0.45);
+        }
+
+        .lessonbtn:active {
+            transform: translateY(0) scale(0.98);
+        }
+    
     </style>
 </head>
 
 <body>
 
-    <!-- ==================== SECTION 1 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 1</h2>
-                <div class="video-box">
-                    <video src="sample-video1.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
+    <div class="confetti-container" id="confetti-container"></div>
 
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+    <h1 class="header">ICE BREAKER: PINOY HENYO</h1>
+    <h2 class="subhead2">GAME RULES</h2>
+
+    <!-- 3 PINOY HENYO RULES CARDS -->
+    <div class="cards-container">
+
+        <!-- Rule 1 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
                 </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
+                <h3 class="rule-title">1. Guess the Mystery Word</h3>
+                <p>Both player holds a secret word on their forehead while their teammate asks yes-or-no questions to figure it out as fast as possible.</p>
             </div>
         </div>
+
+        <!-- Rule 2 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="rule-title">2. Three Allowed Answers</h3>
+                <p>The clue-giver can only reply with <span class="highlight-word">OO</span> (Yes), <span class="highlight-word">HINDI</span> (No), or <span class="highlight-word">PWEDE</span> (Maybe). Giving extra hints or gestures is forbidden!</p>
+            </div>
+        </div>
+
+        <!-- Rule 3 -->
+        <div class="card-wrapper">
+            <div class="container">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="13" r="8"></circle>
+                        <path d="M12 9v4l2 2"></path>
+                        <path d="M9 2h6"></path>
+                    </svg>
+                </div>
+                <h3 class="rule-title">3. Penalties & Fastest Win</h3>
+                <p>Breaking the rule adds a <span class="highlight-word">+2 second penalty</span> to your clock. Once both teams guess their word, the team with the fastest time wins!</p>
+            </div>
+        </div>
+
     </div>
 
-    <!-- ==================== SECTION 2 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 2</h2>
-                <div class="video-box">
-                    <video src="sample-video2.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
+    <!-- SIDE-BY-SIDE TEAM STOPWATCHES -->
+    <div class="stopwatches-wrapper">
 
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
+        <!-- STOPWATCH 1 (LEFT) -->
+        <div class="stopwatch-card-wrapper" id="card-1">
+            <div class="stopwatch-card">
+                <input type="text" class="stopwatch-title" id="title-1" value="TEAM 1" aria-label="Stopwatch 1 Title">
+
+                <div class="time-display" id="display-1">00:00</div>
+
+                <button class="add-time-btn" onclick="addTwoSeconds(1)">+2 SECONDS PENALTY</button>
+
+                <div class="controls-row">
+                    <button class="ctrl-btn start-btn" onclick="startStopwatch(1)">START</button>
+                    <button class="ctrl-btn pause-btn" onclick="pauseStopwatch(1)">PAUSE</button>
+                    <button class="ctrl-btn reset-btn" onclick="resetStopwatch(1)">RESET</button>
                 </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
             </div>
         </div>
+
+        <!-- STOPWATCH 2 (RIGHT) -->
+        <div class="stopwatch-card-wrapper" id="card-2">
+            <div class="stopwatch-card">
+                <input type="text" class="stopwatch-title" id="title-2" value="TEAM 2" aria-label="Stopwatch 2 Title">
+
+                <div class="time-display" id="display-2">00:00</div>
+
+                <button class="add-time-btn" onclick="addTwoSeconds(2)">+2 SECONDS PENALTY</button>
+
+                <div class="controls-row">
+                    <button class="ctrl-btn start-btn" onclick="startStopwatch(2)">START</button>
+                    <button class="ctrl-btn pause-btn" onclick="pauseStopwatch(2)">PAUSE</button>
+                    <button class="ctrl-btn reset-btn" onclick="resetStopwatch(2)">RESET</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- ==================== SECTION 3 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 3</h2>
-                <div class="video-box">
-                    <video src="sample-video3.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
-
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
-                </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
-            </div>
-        </div>
+    <!-- Sync Buttons for Both Stopwatches at Once -->
+    <div class="global-controls">
+        <button class="global-btn" onclick="startBoth()">START BOTH</button>
+        <button class="global-btn" onclick="pauseBoth()">PAUSE BOTH</button>
+        <button class="global-btn" onclick="resetBoth()">RESET BOTH</button>
     </div>
 
-    <!-- ==================== SECTION 4 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 4</h2>
-                <div class="video-box">
-                    <video src="sample-video4.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
-
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
-                </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
-            </div>
-        </div>
+    <!-- Bottom Winner Declaration Section -->
+    <div class="winner-section">
+        <button class="declare-winner-btn" onclick="declareWinner()">DECLARE WINNER</button>
+        <div class="winner-banner" id="winner-banner"></div>
     </div>
 
-    <!-- ==================== SECTION 5 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 5</h2>
-                <div class="video-box">
-                    <video src="sample-video5.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
 
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
-                </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SECTION 6 ==================== -->
-    <div class="interactive-section-wrapper">
-        <div class="interactive-container">
-            <div class="left-panel">
-                <h2 class="video-header">VIDEO 6</h2>
-                <div class="video-box">
-                    <video src="sample-video6.mp4" autoplay muted loop playsinline></video>
-                </div>
-            </div>
-
-            <div class="options-panel">
-                <div class="buttons-grid">
-                    <button class="option-btn"><span class="btn-text">BUTTON 1</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 2</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 3</span></button>
-                    <button class="option-btn"><span class="btn-text">BUTTON 4</span></button>
-                </div>
-                <button class="hint-btn" onclick="toggleHint(this)">HINT</button>
-            </div>
-        </div>
+    <div class="winner-section">
+        <a href="firstPage.html"><button class="lessonbtn" onclick="">START LESSON</button></a>
     </div>
 
     <script>
-        // Toggle HINT reveal for specific section
-        function toggleHint(btnElement) {
-            const panel = btnElement.closest('.options-panel');
-            panel.classList.toggle('revealed');
+        const stopwatches = {
+            1: { elapsedSeconds: 0, interval: null },
+            2: { elapsedSeconds: 0, interval: null }
+        };
 
-            if (panel.classList.contains('revealed')) {
-                btnElement.textContent = 'HIDE HINT';
-            } else {
-                btnElement.textContent = 'HINT';
-            }
+        function formatTime(totalSeconds) {
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
         }
 
-        // Scroll reveal slide-up animation
-        document.addEventListener('DOMContentLoaded', () => {
-            const wrappers = document.querySelectorAll('.interactive-section-wrapper');
+        function updateDisplay(id) {
+            const display = document.getElementById(`display-${id}`);
+            display.textContent = formatTime(stopwatches[id].elapsedSeconds);
+        }
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('show');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.15 });
+        function clearWinnerState() {
+            document.getElementById('card-1').classList.remove('winner-card');
+            document.getElementById('card-2').classList.remove('winner-card');
+            const banner = document.getElementById('winner-banner');
+            banner.classList.remove('show');
+        }
 
-            wrappers.forEach(wrapper => observer.observe(wrapper));
-        });
+        function triggerConfetti() {
+            const container = document.getElementById('confetti-container');
+            container.innerHTML = '';
+
+            const colors = ['#ff3b30', '#bc8a1d', '#fff8f0', '#e0483e', '#f5c451'];
+            const pieceCount = 75;
+
+            for (let i = 0; i < pieceCount; i++) {
+                const piece = document.createElement('div');
+                piece.classList.add('confetti-piece');
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const delay = Math.random() * 0.45;
+                const duration = 2.2 + Math.random() * 1.5;
+                const sway = (Math.random() * 60 - 30).toFixed(0) + 'px';
+                const width = 7 + Math.random() * 7;
+                const height = 12 + Math.random() * 12;
+
+                piece.style.backgroundColor = color;
+                piece.style.left = `${left}%`;
+                piece.style.width = `${width}px`;
+                piece.style.height = `${height}px`;
+                piece.style.animationDelay = `${delay}s`;
+                piece.style.setProperty('--fall-duration', `${duration}s`);
+                piece.style.setProperty('--sway', sway);
+
+                container.appendChild(piece);
+            }
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 4200);
+        }
+
+        function addTwoSeconds(id) {
+            stopwatches[id].elapsedSeconds += 2;
+            updateDisplay(id);
+            clearWinnerState();
+        }
+
+        function startStopwatch(id) {
+            if (stopwatches[id].interval) return;
+
+            clearWinnerState();
+            const display = document.getElementById(`display-${id}`);
+            display.classList.add('running');
+
+            stopwatches[id].interval = setInterval(() => {
+                stopwatches[id].elapsedSeconds++;
+                updateDisplay(id);
+            }, 1000);
+        }
+
+        function pauseStopwatch(id) {
+            clearInterval(stopwatches[id].interval);
+            stopwatches[id].interval = null;
+
+            const display = document.getElementById(`display-${id}`);
+            display.classList.remove('running');
+        }
+
+        function resetStopwatch(id) {
+            pauseStopwatch(id);
+            stopwatches[id].elapsedSeconds = 0;
+            updateDisplay(id);
+            clearWinnerState();
+        }
+
+        function startBoth() {
+            startStopwatch(1);
+            startStopwatch(2);
+        }
+
+        function pauseBoth() {
+            pauseStopwatch(1);
+            pauseStopwatch(2);
+        }
+
+        function resetBoth() {
+            resetStopwatch(1);
+            resetStopwatch(2);
+        }
+
+        function declareWinner() {
+            pauseBoth();
+
+            const time1 = stopwatches[1].elapsedSeconds;
+            const time2 = stopwatches[2].elapsedSeconds;
+            const name1 = document.getElementById('title-1').value.trim() || 'TEAM 1';
+            const name2 = document.getElementById('title-2').value.trim() || 'TEAM 2';
+
+            const banner = document.getElementById('winner-banner');
+            clearWinnerState();
+
+            if (time1 === 0 && time2 === 0) {
+                banner.innerHTML = `No times recorded yet! Start the stopwatches first.`;
+            } else if (time1 === 0) {
+                document.getElementById('card-2').classList.add('winner-card');
+                banner.innerHTML = `FASTEST TIME WINNER: <span class="winner-highlight">${name2}</span> (${formatTime(time2)})`;
+                triggerConfetti();
+            } else if (time2 === 0) {
+                document.getElementById('card-1').classList.add('winner-card');
+                banner.innerHTML = `FASTEST TIME WINNER: <span class="winner-highlight">${name1}</span> (${formatTime(time1)})`;
+                triggerConfetti();
+            } else if (time1 < time2) {
+                document.getElementById('card-1').classList.add('winner-card');
+                banner.innerHTML = `FASTEST TIME WINNER: <span class="winner-highlight">${name1}</span> (${formatTime(time1)} vs ${formatTime(time2)})`;
+                triggerConfetti();
+            } else if (time2 < time1) {
+                document.getElementById('card-2').classList.add('winner-card');
+                banner.innerHTML = `FASTEST TIME WINNER: <span class="winner-highlight">${name2}</span> (${formatTime(time2)} vs ${formatTime(time1)})`;
+                triggerConfetti();
+            } else {
+                banner.innerHTML = `IT'S A TIE! Both finished at <span class="winner-highlight">${formatTime(time1)}</span>`;
+                triggerConfetti();
+            }
+
+            banner.classList.add('show');
+        }
     </script>
 
 </body>
